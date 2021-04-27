@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Dog : MonoBehaviour
+public class DogController : MonoBehaviour
 {
     public GameObject ball;
     public GameObject player;
@@ -28,14 +28,14 @@ class FollowPlayer : State
     GameObject player;
     public override void Enter()
     {
-        player = owner.GetComponent<Dog>().player;
+        player = owner.GetComponent<DogController>().player;
         GetStopPos();
         owner.GetComponent<Arrive>().targetPosition = stopPos;
         owner.GetComponent<Arrive>().enabled = true;
     }
     public override void Think()
     {
-        if (player.GetComponent<FPSController>().ifThrownBall)
+        if (player.GetComponent<ThrowBall>().ifThrownBall)
         {
             owner.GetComponent<StateMachine>().ChangeState(new FetchBall());
         }
@@ -68,12 +68,12 @@ class FetchBall : State
 
     public override void Enter()
     {
-        player = owner.GetComponent<Dog>().player;
-        owner.GetComponent<Dog>().ball = player.GetComponent<FPSController>().ball;
+        player = owner.GetComponent<DogController>().player;
+        owner.GetComponent<DogController>().ball = player.GetComponent<ThrowBall>().ball;
         head = owner.transform.Find("Head").gameObject;
-        ballPos = player.GetComponent<FPSController>().ball.transform.position;
+        ballPos = player.GetComponent<ThrowBall>().ball.transform.position;
 
-        owner.GetComponent<Dog>().Bark();
+        owner.GetComponent<DogController>().Bark();
 
         owner.GetComponent<Arrive>().targetPosition = ballPos;
         owner.GetComponent<Arrive>().enabled = true;
@@ -86,7 +86,7 @@ class FetchBall : State
         }
         else
         {
-            ballPos = player.GetComponent<FPSController>().ball.transform.position;
+            ballPos = player.GetComponent<ThrowBall>().ball.transform.position;
             ballPos.y = 0.25f;
             owner.GetComponent<Arrive>().targetPosition = ballPos;
         }
@@ -106,7 +106,7 @@ class AttachBall : State
     public override void Enter()
     {
         ballAttach = owner.transform.Find("Dog/BallAttach").gameObject;
-        ball = owner.GetComponent<Dog>().ball;
+        ball = owner.GetComponent<DogController>().ball;
         ball.GetComponent<Rigidbody>().useGravity = false;
         ball.transform.parent = ballAttach.transform;
         ball.transform.position = ballAttach.transform.position;
@@ -122,7 +122,7 @@ class ReturnToPlayer : State
 
     public override void Enter()
     {
-        player = owner.GetComponent<Dog>().player;
+        player = owner.GetComponent<DogController>().player;
         GetStopPos();
         owner.GetComponent<Arrive>().targetPosition = stopPos;
         owner.GetComponent<Arrive>().enabled = true;
@@ -160,15 +160,15 @@ class DropBall : State
     GameObject ball;
     public override void Enter()
     {
-        player = owner.GetComponent<Dog>().player;
-        ball = owner.GetComponent<Dog>().ball;
+        player = owner.GetComponent<DogController>().player;
+        ball = owner.GetComponent<DogController>().ball;
 
-        owner.GetComponent<Dog>().Bark();
+        owner.GetComponent<DogController>().Bark();
 
         ball.transform.parent = null;
         ball.GetComponent<Rigidbody>().AddForce(owner.transform.forward * 100);
         ball.GetComponent<Rigidbody>().useGravity = true;
-        player.GetComponent<FPSController>().ifThrownBall = false;
+        player.GetComponent<ThrowBall>().ifThrownBall = false;
         owner.GetComponent<StateMachine>().ChangeState(new FollowPlayer());
     }
 }
