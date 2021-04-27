@@ -14,8 +14,6 @@ public class Dog : MonoBehaviour
     }
 }
 
-
-
 class FollowPlayer : State
 {
     Vector3 stopPos;
