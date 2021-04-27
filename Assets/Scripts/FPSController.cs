@@ -124,7 +124,7 @@ public class FPSController : MonoBehaviour
         Strafe(contStrafe * speed * Time.deltaTime);
 
 
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.Space))
         {
             ThrowBall();
         }
