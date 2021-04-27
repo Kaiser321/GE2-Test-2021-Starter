@@ -28,3 +28,10 @@ Marking Scheme
 | Jazz (any other cool thing you want to implement to enhance the simulation) | 20 marks |
 
 Submit the url to your repo before 5pm today through [this link](https://docs.google.com/forms/d/e/1FAIpQLSfBxtMyunljtU-JyiUt80HjvzqQXuFgJWXIBX5x3lCJcp7Wbg/viewform) 
+
+---
+Trees models: "Low Poly Trees" (https://skfb.ly/6BOWV) by EdwinRC is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+Cabin model: "Log Cabin (Free Download)" (https://skfb.ly/6ZQuZ) by Kless Gyzen is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+Music: "Acoustic Breeze" from www.bensound.com.
