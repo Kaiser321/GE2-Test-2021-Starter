@@ -12,6 +12,11 @@ public class FPSController : MonoBehaviour
     public bool allowPitch = true;
 
     public GUIStyle style;
+
+    public GameObject ballPrehab;
+
+    public bool ifHaveBall = true;
+    public int throwForce = 1000;
     // Use this for initialization
     void Start()
     {
@@ -116,5 +121,20 @@ public class FPSController : MonoBehaviour
         float contStrafe = Input.GetAxis("Horizontal");
         Walk(contWalk * speed * Time.deltaTime);
         Strafe(contStrafe * speed * Time.deltaTime);
+
+
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            ThrowBall();
+        }
+    }
+
+    void ThrowBall()
+    {
+        if (ifHaveBall) {
+            GameObject ball = Instantiate(ballPrehab, transform.position, transform.rotation);
+            ball.GetComponent<Rigidbody>().AddForce(transform.forward * throwForce);
+            ifHaveBall = false;
+        }
     }
 }
