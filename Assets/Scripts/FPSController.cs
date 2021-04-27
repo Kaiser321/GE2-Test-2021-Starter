@@ -15,7 +15,8 @@ public class FPSController : MonoBehaviour
 
     public GameObject ballPrehab;
 
-    public bool ifHaveBall = true;
+    public bool ifThrownBall = false;
+    public GameObject ball;
     public int throwForce = 1000;
     // Use this for initialization
     void Start()
@@ -131,10 +132,11 @@ public class FPSController : MonoBehaviour
 
     void ThrowBall()
     {
-        if (ifHaveBall) {
-            GameObject ball = Instantiate(ballPrehab, transform.position, transform.rotation);
-            ball.GetComponent<Rigidbody>().AddForce(transform.forward * throwForce);
-            ifHaveBall = false;
+        if (!ifThrownBall) {
+            GameObject newBall = Instantiate(ballPrehab, transform.position, transform.rotation);
+            newBall.GetComponent<Rigidbody>().AddForce(transform.forward * throwForce);
+            ball = newBall;
+            ifThrownBall = true;
         }
     }
 }
