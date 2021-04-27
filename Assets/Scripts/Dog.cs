@@ -37,6 +37,7 @@ class FollowPlayer : State
             owner.GetComponent<Arrive>().targetPosition = stopPos;
         }
     }
+
     public override void Exit()
     {
         owner.GetComponent<Arrive>().enabled = false;
@@ -54,32 +55,34 @@ class FollowPlayer : State
 class FetchBall : State
 {
     GameObject player;
-    Vector3 ballPos;
+    GameObject ball;
     GameObject head;
     public override void Enter()
     {
         player = owner.GetComponent<Dog>().player;
-        owner.GetComponent<Dog>().ball = player.GetComponent<FPSController>().ball;
         head = owner.transform.Find("Head").gameObject;
-        ballPos = player.GetComponent<FPSController>().ball.transform.position;
-        owner.GetComponent<Arrive>().targetPosition = ballPos;
+        ball = player.GetComponent<FPSController>().ball;
+
+        owner.GetComponent<Dog>().ball = player.GetComponent<FPSController>().ball;
+        owner.GetComponent<Arrive>().targetGameObject = ball;
         owner.GetComponent<Arrive>().enabled = true;
     }
     public override void Think()
     {
-        if (Vector3.Distance(head.transform.position, ballPos) <= 1)
+        if (Vector3.Distance(head.transform.position, ball.transform.position) <= 2.5f)
         {
             owner.GetComponent<StateMachine>().ChangeState(new AttachBall());
         }
         else
         {
-            ballPos = player.GetComponent<FPSController>().ball.transform.position;
-            ballPos.y = 0.25f;
-            owner.GetComponent<Arrive>().targetPosition = ballPos;
+            Vector3 pos = owner.transform.position;
+            pos.y = 0.25f;
+            owner.transform.position = pos;
         }
     }
     public override void Exit()
     {
+        owner.GetComponent<Arrive>().targetGameObject = null;
         owner.GetComponent<Arrive>().enabled = false;
     }
 
@@ -89,21 +92,15 @@ class AttachBall : State
 {
     GameObject ballAttach;
     GameObject ball;
+
     public override void Enter()
     {
         ballAttach = owner.transform.Find("Dog/BallAttach").gameObject;
         ball = owner.GetComponent<Dog>().ball;
-    }
-    public override void Think()
-    {
         ball.GetComponent<Rigidbody>().useGravity = false;
         ball.transform.parent = ballAttach.transform;
         ball.transform.position = ballAttach.transform.position;
         owner.GetComponent<StateMachine>().ChangeState(new ReturnToPlayer());
-
-    }
-    public override void Exit()
-    {
     }
 
 }
@@ -155,16 +152,11 @@ class DropBall : State
     {
         player = owner.GetComponent<Dog>().player;
         ball = owner.GetComponent<Dog>().ball;
-    }
-    public override void Think()
-    {
+
         ball.transform.parent = null;
+        ball.GetComponent<Rigidbody>().AddForce(owner.transform.forward * 100);
         ball.GetComponent<Rigidbody>().useGravity = true;
         player.GetComponent<FPSController>().ifThrownBall = false;
         owner.GetComponent<StateMachine>().ChangeState(new FollowPlayer());
-    }
-
-    public override void Exit()
-    {
     }
 }

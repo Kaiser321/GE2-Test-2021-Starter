@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HarmonicWave : MonoBehaviour
+public class TailWaggle : MonoBehaviour
 {
     public float frequency = 1;
     public float amplitude = 40;
@@ -21,7 +21,6 @@ public class HarmonicWave : MonoBehaviour
     void Update()
     {
         CalculateWiggleSpeed();
-        Debug.Log(body.GetComponent<Boid>().velocity.magnitude);
         float angle = Mathf.Sin(theta) * amplitude;
         Quaternion q = Quaternion.AngleAxis(angle, Vector3.down);
         transform.rotation = q * body.transform.rotation;
