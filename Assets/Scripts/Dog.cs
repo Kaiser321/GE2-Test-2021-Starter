@@ -7,10 +7,18 @@ public class Dog : MonoBehaviour
     public GameObject ball;
     public GameObject player;
 
+    public List<AudioClip> barks;
+    public AudioSource audio;
+
     // Start is called before the first frame update
     void Start()
     {
         GetComponent<StateMachine>().ChangeState(new FollowPlayer());
+    }
+
+    public void Bark()
+    {
+        audio.PlayOneShot(barks[Random.Range(0, barks.Count)]);
     }
 }
 
@@ -55,34 +63,36 @@ class FollowPlayer : State
 class FetchBall : State
 {
     GameObject player;
-    GameObject ball;
+    Vector3 ballPos;
     GameObject head;
+
     public override void Enter()
     {
         player = owner.GetComponent<Dog>().player;
-        head = owner.transform.Find("Head").gameObject;
-        ball = player.GetComponent<FPSController>().ball;
-
         owner.GetComponent<Dog>().ball = player.GetComponent<FPSController>().ball;
-        owner.GetComponent<Arrive>().targetGameObject = ball;
+        head = owner.transform.Find("Head").gameObject;
+        ballPos = player.GetComponent<FPSController>().ball.transform.position;
+
+        owner.GetComponent<Dog>().Bark();
+
+        owner.GetComponent<Arrive>().targetPosition = ballPos;
         owner.GetComponent<Arrive>().enabled = true;
     }
     public override void Think()
     {
-        if (Vector3.Distance(head.transform.position, ball.transform.position) <= 2.5f)
+        if (Vector3.Distance(head.transform.position, ballPos) <= 1)
         {
             owner.GetComponent<StateMachine>().ChangeState(new AttachBall());
         }
         else
         {
-            Vector3 pos = owner.transform.position;
-            pos.y = 0.25f;
-            owner.transform.position = pos;
+            ballPos = player.GetComponent<FPSController>().ball.transform.position;
+            ballPos.y = 0.25f;
+            owner.GetComponent<Arrive>().targetPosition = ballPos;
         }
     }
     public override void Exit()
     {
-        owner.GetComponent<Arrive>().targetGameObject = null;
         owner.GetComponent<Arrive>().enabled = false;
     }
 
@@ -152,6 +162,8 @@ class DropBall : State
     {
         player = owner.GetComponent<Dog>().player;
         ball = owner.GetComponent<Dog>().ball;
+
+        owner.GetComponent<Dog>().Bark();
 
         ball.transform.parent = null;
         ball.GetComponent<Rigidbody>().AddForce(owner.transform.forward * 100);
